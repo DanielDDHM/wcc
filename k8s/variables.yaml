@@ -1,0 +1,30 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: workd-coin-converter-configmap
+data:
+  HOST: "__HOST__"
+  PORT: "__PORT__"
+  REDIS_HOST: "__REDIS_HOST__"
+  REDIS_PORT: "__REDIS_PORT__"
+  DB_HOST: "__DB_HOST__"
+  DB_PORT: "__DB_PORT__"
+  DB_SSL_MODE: "disable"
+  DB_USER: "__DB_USER__"
+  DB_NAME: "__DB_NAME__"
+  DB_TYPE: "mysql"
+  DB_MAX_IDLE_CONNS: "10"
+  DB_MAX_OPENS_CONNS: "100"
+  DB_CONN_MAX_LIFETIME: "60"
+  OWS_URL_BASE: "__OWS_URL_BASE__"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: workd-coin-converter-secret
+type: Opaque
+stringData:
+  DB_PASS: "__DB_PASS__"
+  OWS_KEY: "__OWS_KEY__"
+  OWS_SECRET: "__OWS_SECRET__"
+  API_SECRET: "__API_SECRET__"

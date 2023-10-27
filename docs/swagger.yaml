@@ -1,0 +1,354 @@
+definitions:
+  dtos.CreatePartnerDto:
+    properties:
+      country:
+        type: string
+      locale:
+        type: string
+      name:
+        type: string
+      ttl:
+        type: integer
+    type: object
+  dtos.CurrencyDto:
+    properties:
+      is_pivot:
+        type: boolean
+      iso_code:
+        maxLength: 6
+        minLength: 3
+        type: string
+      name:
+        maxLength: 50
+        minLength: 3
+        type: string
+      precision:
+        maximum: 10
+        type: integer
+      price_in_pivot:
+        type: string
+      separator:
+        maxLength: 10
+        type: string
+      type:
+        type: string
+    required:
+    - is_pivot
+    - iso_code
+    - name
+    - precision
+    - price_in_pivot
+    - separator
+    - type
+    type: object
+  dtos.CustomRatioDto:
+    properties:
+      ask_ratio:
+        type: number
+      buy_ratio:
+        type: number
+      currency:
+        type: string
+      partner_id:
+        type: integer
+      target:
+        type: string
+    required:
+    - ask_ratio
+    - buy_ratio
+    - currency
+    - partner_id
+    - target
+    type: object
+  dtos.RequestQuoteDto:
+    properties:
+      amount:
+        type: number
+      destination_currency:
+        type: string
+      origin_currency:
+        type: string
+      size:
+        type: number
+      user_identifier:
+        type: string
+    required:
+    - amount
+    - destination_currency
+    - origin_currency
+    - size
+    type: object
+  handlers.HTTPError:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: status bad request
+        type: string
+    type: object
+  handlers.HTTPUnauthorized:
+    properties:
+      code:
+        example: 401
+        type: integer
+      message:
+        example: Unauthorized
+        type: string
+    type: object
+  handlers.Response:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+info:
+  contact: {}
+paths:
+  /currencies:
+    get:
+      consumes:
+      - application/json
+      description: Get all currencies
+      parameters:
+      - description: api secret
+        in: header
+        name: x-api-secret
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.HTTPUnauthorized'
+      summary: Get All Currencies
+      tags:
+      - currencies
+    post:
+      consumes:
+      - application/json
+      description: Create a new currency
+      parameters:
+      - description: Add Currency
+        in: body
+        name: partner
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CurrencyDto'
+      - description: api secret
+        in: header
+        name: x-api-secret
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: New Currency
+      tags:
+      - currencies
+  /partners:
+    get:
+      consumes:
+      - application/json
+      description: Get all partner
+      parameters:
+      - description: api secret
+        in: header
+        name: x-api-secret
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.HTTPUnauthorized'
+      summary: Get All Partner
+      tags:
+      - partners
+    post:
+      consumes:
+      - application/json
+      description: Create a new partner to consuming our api
+      parameters:
+      - description: Add Partner
+        in: body
+        name: partner
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreatePartnerDto'
+      - description: api secret
+        in: header
+        name: x-api-secret
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.HTTPUnauthorized'
+      summary: New Partner
+      tags:
+      - partners
+  /partners/disable/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Revogate partner to use our api
+      parameters:
+      - description: Partner id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: api secret
+        in: header
+        name: x-api-secret
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.HTTPUnauthorized'
+      summary: Revogate Partner
+      tags:
+      - partners
+  /quotes:
+    post:
+      consumes:
+      - application/json
+      description: Create a new quote
+      parameters:
+      - description: Add Quote
+        in: body
+        name: partner
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.RequestQuoteDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.HTTPUnauthorized'
+      summary: New Quote
+      tags:
+      - quotes
+  /quotes/confirm/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Confirm a quote
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.HTTPUnauthorized'
+      summary: Confirm Quote
+      tags:
+      - quotes
+  /ratios:
+    post:
+      consumes:
+      - application/json
+      description: Create a new custom ratio
+      parameters:
+      - description: Add Custom Ratio
+        in: body
+        name: partner
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CustomRatioDto'
+      - description: api secret
+        in: header
+        name: x-api-secret
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.HTTPUnauthorized'
+      summary: New Custom Ratio
+      tags:
+      - Custom Ratio
+swagger: "2.0"
